@@ -20,9 +20,9 @@ How many official ARPA stations have an independent citizen sensor within 1km? A
 |---|---|---|---|
 | OpenAQ (EEA) | Official ARPA (re-publisher) | 16 | 749 |
 | AQICN | Official ARPA (re-publisher) | 3 | - |
-| AirGradient | Independent | 4 | 65 |
+| AirGradient | Independent | 4 | 67 |
 | SmartCitizenKit | Independent | 14 | 25 |
-| Sensor.Community | Independent | 12 | 1,159 |
+| Sensor.Community | Independent | 12 | ~1,355 (growing) |
 
 ---
 
@@ -34,7 +34,7 @@ How many official ARPA stations have an independent citizen sensor within 1km? A
 93% of Italian ARPA stations have no independent sensor within 1km. In MCM the rate is 69% uncovered (only 5 of 16 ARPA stations have a nearby independent sensor).
 
 **Gap 2 - Temporal (0 years)**  
-No independent sensor in MCM has historical data before October 2024. All 37 Sensor.Community PM sensors in MCM are brand new with no archive. Maximum overlap period is 42 days (Dec 2024 - Jan 2025).
+No independent sensor in MCM has historical data before October 2024. All Sensor.Community PM sensors in MCM are brand new with no archive. Maximum overlap period is 42 days (Dec 2024 - Jan 2025).
 
 **Gap 3 - Pollutant Mismatch (2 of 7)**  
 ARPA measures gas pollutants (NO2, O3, SO2) for regulatory compliance. Independent citizen sensors mainly measure particulate matter (PM2.5, PM10). Only PM2.5 and PM10 are common between both networks.
@@ -44,9 +44,25 @@ The one valid comparable pair (Milano Pascal ARPA vs SaliuA0A6 SCK) showed SCK r
 
 ---
 
+## Statistical Results - Reading Comparison
+
+| Metric | PM2.5 | PM10 |
+|---|---|---|
+| ARPA mean | 34.91 ug/m3 | 48.34 ug/m3 |
+| SCK mean | 7.88 ug/m3 | 8.67 ug/m3 |
+| R2 | 0.020 | 0.004 |
+| Bias | -27.03 ug/m3 | -39.67 ug/m3 |
+| RMSE | 32.84 ug/m3 | 44.41 ug/m3 |
+| SCK/ARPA ratio | 0.23 (4.4x lower) | 0.18 (5.6x lower) |
+| Matched hours | 151 | 151 |
+
+*Full statistics including median, standard deviation, variance and IQR are printed in Cell 38 output.*
+
+---
+
 ## Notebook Structure
 
-`Enhancing Air Quality Data Integration.ipynb` contains all analysis across 43 cells:
+`Enhancing Air Quality Data Integration.ipynb` contains all analysis across 46 cells:
 
 | Cells | Step | Description |
 |---|---|---|
@@ -57,9 +73,25 @@ The one valid comparable pair (Milano Pascal ARPA vs SaliuA0A6 SCK) showed SCK r
 | 30-34 | Step 2 - Proximity Analysis | MCM proximity rate + Italy national analysis |
 | 35 | Step 3 - Terminology | Rename overlap to proximity in all outputs |
 | 36 | Step 3 - Typology | Station environment classification for all 5 pairs |
-| 37 | Step 3 - Typology Map | Interactive HTML map with color coding |
-| 38 | Step 3 - Reading Comparison | PM2.5 and PM10 comparison: ARPA vs SCK |
+| 37 | Step 3 - Typology Map | Interactive HTML map - MCM proximity pairs color coded |
+| 38 | Step 3 - Reading Comparison | PM2.5 and PM10 comparison - ARPA vs SCK with full statistics |
 | 39-42 | Step 3 - Investigation | SC archive check, data availability for all pairs |
+| 43-45 | Step 3 - Italy Map | Full Italy interactive map - all ARPA + all independent sensors |
+| 46 | - | Empty |
+
+### How the 3x3 Grid Query Works (Sensor.Community)
+
+The Sensor.Community API has a radius limit per query. Italy is too large to cover in a single query. To fetch all SC sensors across Italy, the country was divided into a 3x3 grid of 9 cells:
+
+```
+Italy bounding box: lat 36-47.5, lon 6-19
+
+Grid 1,1  Grid 1,2  Grid 1,3   (South)
+Grid 2,1  Grid 2,2  Grid 2,3   (Centre)
+Grid 3,1  Grid 3,2  Grid 3,3   (North)
+```
+
+Each cell was queried separately using the SC area filter API. Results were merged and deduplicated by unique station ID to give the final count of approximately 1,355 unique PM sensors across Italy.
 
 ---
 
@@ -113,10 +145,11 @@ Place in the same directory as the notebook:
 |---|---|
 | `comparative_table_final.csv` | All 5 networks: pollutants, dates, null rates |
 | `station_comparison_independent.csv` | MCM proximity pairs - independent sensors only |
-| `station_comparison_italy_independent.csv` | Italy proximity pairs |
+| `station_comparison_italy_independent.csv` | Italy proximity pairs - all 749 ARPA stations |
 | `AQ_Step1_Visual_Report.xlsx` | 7-sheet Excel report with charts |
-| `typology_map.html` | Interactive map - station typology color coded |
-| `sensor_comparison_plot.png` | PM2.5 and PM10 time series + scatter plots |
+| `typology_map.html` | Interactive map - MCM station typology color coded |
+| `sensor_comparison_plot.png` | PM2.5 and PM10 time series and scatter plots |
+| `italy_map.html` | Interactive map - all Italy ARPA and independent sensors |
 
 ---
 
@@ -126,22 +159,10 @@ Place in the same directory as the notebook:
 Identified all air quality networks operating in MCM. Confirmed that OpenAQ EEA and AQICN re-publish official ARPA Lombardia data and are not independent. Final independent networks: AirGradient (4), SmartCitizenKit (14), Sensor.Community (12).
 
 ### Step 2 - Proximity Analysis
-Calculated the proximity rate between ARPA official stations and independent sensors using a 1km threshold. MCM proximity rate: 31% (independent only). Italy proximity rate: 7% (93% of ARPA stations have no independent sensor nearby).
+Calculated the proximity rate between ARPA official stations and independent sensors using a 1km threshold. MCM proximity rate: 31% (independent only). Italy proximity rate: approximately 7% (93% of ARPA stations have no independent sensor nearby). Italy-wide data fetched using 3x3 grid method for Sensor.Community.
 
 ### Step 3 - Typology and Reading Comparison
-Verified station typology (Traffic/Background) before comparing readings. Only 1 of 5 proximity pairs had both matching typology and usable data: Milano Pascal (Background Urban) vs SaliuA0A6 SCK (Background Urban, Citta Studi). Comparison period: Dec 2024 - Jan 2025 (42 days, 151 matched hourly pairs).
-
----
-
-## Results Summary
-
-| Metric | PM2.5 | PM10 |
-|---|---|---|
-| ARPA mean | 34.91 ug/m3 | 48.34 ug/m3 |
-| SCK mean | 7.88 ug/m3 | 8.67 ug/m3 |
-| R2 | 0.020 | 0.004 |
-| Bias | -27.03 ug/m3 | -39.67 ug/m3 |
-| SCK/ARPA ratio | 0.23 (4.4x lower) | 0.18 (5.6x lower) |
+Verified station typology (Traffic/Background) before comparing readings. Only 1 of 5 proximity pairs had both matching typology and usable data: Milano Pascal (Background Urban) vs SaliuA0A6 SCK (Background Urban, Citta Studi). Comparison period: Dec 2024 - Jan 2025 (42 days, 151 matched hourly pairs). Full statistical analysis including mean, median, standard deviation, variance, IQR, R2, bias and RMSE.
 
 ---
 
