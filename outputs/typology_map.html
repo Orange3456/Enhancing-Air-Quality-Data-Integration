@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e67ee378723fee8477c5b631c35cedb1 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style='position:fixed; bottom:30px; left:30px; z-index:1000;
+            background:#021B2E; color:white; padding:16px 20px;
+            border-radius:10px; font-family:Arial; font-size:12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); min-width:210px;'>
+    <div style='font-size:14px; font-weight:bold; margin-bottom:12px;
+                color:#0A9396; border-bottom:1px solid #0A9396; padding-bottom:6px;'>
+        STATION TYPOLOGY LEGEND
+    </div>
+    <b>ARPA Official Stations</b><br>
+    <span style='color:#E63946;'>&#9632;</span> Traffic Urban (TU) - 4 stations<br>
+    <span style='color:#2DC653;'>&#9632;</span> Background Urban (BU) - 1 station<br>
+    <br>
+    <b>Independent Sensors</b><br>
+    <span style='color:#9B59B6;'>&#9679;</span> SmartCitizenKit (SCK)<br>
+    <span style='color:#3498DB;'>&#9679;</span> AirGradient<br>
+    <span style='color:#F39C12;'>&#9679;</span> Sensor.Community<br>
+    <br>
+    <b>Proximity Lines (within 1km)</b><br>
+    <span style='color:#2DC653;'>&#9135;&#9135;&#9135;</span> Comparable typology<br>
+    <span style='color:#E63946;'>- - -</span> Not comparable<br>
+    <br>
+    <div style='font-size:10px; color:#888; margin-top:6px;'>
+        Circles = 1km proximity zone
+    </div>
+</div>
+    
+<div style='position:fixed; top:12px; left:50%; transform:translateX(-50%);
+            z-index:1000; background:#021B2E; color:white;
+            padding:10px 24px; border-radius:8px; font-family:Arial;
+            font-size:14px; font-weight:bold; text-align:center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border-bottom:3px solid #0A9396;'>
+    MCM Proximity Pairs - Station Typology Map<br>
+    <span style='font-size:11px; font-weight:normal; color:#0A9396;'>
+        5 ARPA stations vs Independent sensors | Color coded by typology
+    </span>
+</div>
+    
+            <div class="folium-map" id="map_e67ee378723fee8477c5b631c35cedb1" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e67ee378723fee8477c5b631c35cedb1 = L.map(
+                "map_e67ee378723fee8477c5b631c35cedb1",
+                {
+                    center: [45.496, 9.21],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7e3a8d9881c180eb75bdc4a9b9ceda69 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_7e3a8d9881c180eb75bdc4a9b9ceda69.addTo(map_e67ee378723fee8477c5b631c35cedb1);
+        
+    
+            var tile_layer_e44f58268393f092a9284760eb4d6a4c = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_e44f58268393f092a9284760eb4d6a4c.addTo(map_e67ee378723fee8477c5b631c35cedb1);
+        
+    
+            var tile_layer_3271b86dad45e5159cb125218d473440 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3271b86dad45e5159cb125218d473440.addTo(map_e67ee378723fee8477c5b631c35cedb1);
+        
+    
+            var feature_group_6ed75ccc8f5684fd30d0db416481e170 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_2197c9a9cc2b3e8c4493d6edae1cd510 = L.polyline(
+                [[45.4628, 9.1958], [45.4654, 9.1859]],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": "5,8", "dashOffset": null, "fill": false, "fillColor": "#E63946", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_6ed75ccc8f5684fd30d0db416481e170);
+        
+    
+            poly_line_2197c9a9cc2b3e8c4493d6edae1cd510.bindTooltip(
+                `<div>
+                     Milano Verziere <-> AirGradient Milano (Not comparable)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8b62e076505c0d7f112315a10e2ab7c9 = L.polyline(
+                [[45.4628, 9.1958], [45.4642, 9.19]],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": "5,8", "dashOffset": null, "fill": false, "fillColor": "#E63946", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_6ed75ccc8f5684fd30d0db416481e170);
+        
+    
+            poly_line_8b62e076505c0d7f112315a10e2ab7c9.bindTooltip(
+                `<div>
+                     Milano Verziere <-> CAL 001 (SCK) (Not comparable)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_92b63981aacdfc453b95dd2f5c0cd738 = L.polyline(
+                [[45.4783, 9.2358], [45.4805, 9.2327]],
+                {"bubblingMouseEvents": true, "color": "#2DC653", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2DC653", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(feature_group_6ed75ccc8f5684fd30d0db416481e170);
+        
+    
+            poly_line_92b63981aacdfc453b95dd2f5c0cd738.bindTooltip(
+                `<div>
+                     Milano Pascal <-> SaliuA0A6 (SCK) (Comparable)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_96c2c07bfcc15a8e9176873e8b2b5898 = L.polyline(
+                [[45.4697, 9.1981], [45.4642, 9.19]],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": "5,8", "dashOffset": null, "fill": false, "fillColor": "#E63946", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_6ed75ccc8f5684fd30d0db416481e170);
+        
+    
+            poly_line_96c2c07bfcc15a8e9176873e8b2b5898.bindTooltip(
+                `<div>
+                     Milano Senato <-> CAL 001 (SCK) (Not comparable)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7045f232a48a2801faf44b6cef2c5395 = L.polyline(
+                [[45.5339, 9.2364], [45.5361, 9.2263]],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": "5,8", "dashOffset": null, "fill": false, "fillColor": "#E63946", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_6ed75ccc8f5684fd30d0db416481e170);
+        
+    
+            poly_line_7045f232a48a2801faf44b6cef2c5395.bindTooltip(
+                `<div>
+                     Sesto S.Giovanni <-> SC near Sesto (Not comparable)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_52afb3e216918ac65c5f07be10759bcf = L.polyline(
+                [[45.5514, 9.2278], [45.544, 9.232]],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": "5,8", "dashOffset": null, "fill": false, "fillColor": "#E63946", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 1.5}
+            ).addTo(feature_group_6ed75ccc8f5684fd30d0db416481e170);
+        
+    
+            poly_line_52afb3e216918ac65c5f07be10759bcf.bindTooltip(
+                `<div>
+                     Cinisello Balsamo <-> SC near Cinisello (Not comparable)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_6ed75ccc8f5684fd30d0db416481e170.addTo(map_e67ee378723fee8477c5b631c35cedb1);
+        
+    
+            var feature_group_9916cc9d0d554b9fcfba8bc86b264c89 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_a2045a9f73484b16d4df9fa4cb0fbb9d = L.marker(
+                [45.4628, 9.1958],
+                {
+}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            var icon_5bb692a576525ebe8b6cf9a602829f7c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "car",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5e98efe1e4f74d6b205348edd46eb17f = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_4ed8a9117751c839282ddb9b29e4ab2d = $(`<div id="html_4ed8a9117751c839282ddb9b29e4ab2d" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:220px;'>         <div style='background:#021B2E; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             Milano Verziere         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Type:</b> Traffic - Urban (TU)<br>             <b>Pollutants:</b> NO2, O3, PM10, PM2.5<br>             <b>Color code:</b>             <span style='color:#E63946;                          font-weight:bold;'>                 🚗 Traffic             </span>         </div>     </div>     </div>`)[0];
+                popup_5e98efe1e4f74d6b205348edd46eb17f.setContent(html_4ed8a9117751c839282ddb9b29e4ab2d);
+            
+        
+
+        marker_a2045a9f73484b16d4df9fa4cb0fbb9d.bindPopup(popup_5e98efe1e4f74d6b205348edd46eb17f)
+        ;
+
+        
+    
+    
+            marker_a2045a9f73484b16d4df9fa4cb0fbb9d.bindTooltip(
+                `<div>
+                     ARPA: Milano Verziere (TU)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a2045a9f73484b16d4df9fa4cb0fbb9d.setIcon(icon_5bb692a576525ebe8b6cf9a602829f7c);
+            
+    
+            var marker_471891a6c4385e0a9eb8d0f9e893a043 = L.marker(
+                [45.4783, 9.2358],
+                {
+}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            var icon_6ddba6aea1e038864466f0ee33f63b0a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "leaf",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5cb7079f0a477f99528c06c4df9bb85c = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_e3e079f5e706353874fd494f0760cc79 = $(`<div id="html_e3e079f5e706353874fd494f0760cc79" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:220px;'>         <div style='background:#021B2E; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             Milano Pascal Citta Studi         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Type:</b> Background - Urban (BU)<br>             <b>Pollutants:</b> NO2, O3, SO2, PM10, PM2.5<br>             <b>Color code:</b>             <span style='color:#2DC653;                          font-weight:bold;'>                 🌿 Background             </span>         </div>     </div>     </div>`)[0];
+                popup_5cb7079f0a477f99528c06c4df9bb85c.setContent(html_e3e079f5e706353874fd494f0760cc79);
+            
+        
+
+        marker_471891a6c4385e0a9eb8d0f9e893a043.bindPopup(popup_5cb7079f0a477f99528c06c4df9bb85c)
+        ;
+
+        
+    
+    
+            marker_471891a6c4385e0a9eb8d0f9e893a043.bindTooltip(
+                `<div>
+                     ARPA: Milano Pascal Citta Studi (BU)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_471891a6c4385e0a9eb8d0f9e893a043.setIcon(icon_6ddba6aea1e038864466f0ee33f63b0a);
+            
+    
+            var marker_d4c3372c7b40b083d1eab536a36512a2 = L.marker(
+                [45.4697, 9.1981],
+                {
+}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            var icon_553a278c54922f14d9b1d4a15ce2a013 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "car",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_10f23970d992d19dd49258a49a3ce667 = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_51c75dbfae7ceff4d4daac5e33b6d6f3 = $(`<div id="html_51c75dbfae7ceff4d4daac5e33b6d6f3" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:220px;'>         <div style='background:#021B2E; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             Milano v.Senato         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Type:</b> Traffic - Urban (TU)<br>             <b>Pollutants:</b> NO2, O3, CO<br>             <b>Color code:</b>             <span style='color:#E63946;                          font-weight:bold;'>                 🚗 Traffic             </span>         </div>     </div>     </div>`)[0];
+                popup_10f23970d992d19dd49258a49a3ce667.setContent(html_51c75dbfae7ceff4d4daac5e33b6d6f3);
+            
+        
+
+        marker_d4c3372c7b40b083d1eab536a36512a2.bindPopup(popup_10f23970d992d19dd49258a49a3ce667)
+        ;
+
+        
+    
+    
+            marker_d4c3372c7b40b083d1eab536a36512a2.bindTooltip(
+                `<div>
+                     ARPA: Milano v.Senato (TU)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d4c3372c7b40b083d1eab536a36512a2.setIcon(icon_553a278c54922f14d9b1d4a15ce2a013);
+            
+    
+            var marker_0dd037ab4e24abd74b73a4526fb4ad6a = L.marker(
+                [45.5339, 9.2364],
+                {
+}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            var icon_f1a53bca5bac023afd0df769b59ebd44 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "car",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7ddba693d6edf4cad2693d060777357c = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_f88cc57f591303f597d0ac042306933d = $(`<div id="html_f88cc57f591303f597d0ac042306933d" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:220px;'>         <div style='background:#021B2E; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             Sesto San Giovanni         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Type:</b> Traffic - Urban (TU)<br>             <b>Pollutants:</b> NO2, O3<br>             <b>Color code:</b>             <span style='color:#E63946;                          font-weight:bold;'>                 🚗 Traffic             </span>         </div>     </div>     </div>`)[0];
+                popup_7ddba693d6edf4cad2693d060777357c.setContent(html_f88cc57f591303f597d0ac042306933d);
+            
+        
+
+        marker_0dd037ab4e24abd74b73a4526fb4ad6a.bindPopup(popup_7ddba693d6edf4cad2693d060777357c)
+        ;
+
+        
+    
+    
+            marker_0dd037ab4e24abd74b73a4526fb4ad6a.bindTooltip(
+                `<div>
+                     ARPA: Sesto San Giovanni (TU)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0dd037ab4e24abd74b73a4526fb4ad6a.setIcon(icon_f1a53bca5bac023afd0df769b59ebd44);
+            
+    
+            var marker_c8f07835ba7a6382c6dc9b96f8147834 = L.marker(
+                [45.5514, 9.2278],
+                {
+}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            var icon_a85e1b2883ecaee42b8a23e0d5856244 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "car",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c5d7d4a5d606a864efb3d6817e20e9ad = L.popup({
+  "maxWidth": 280,
+});
+
+        
+            
+                var html_2c45dabf1fd9bbf8a92e3c2490fa9dac = $(`<div id="html_2c45dabf1fd9bbf8a92e3c2490fa9dac" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:220px;'>         <div style='background:#021B2E; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             Cinisello Balsamo         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Type:</b> Traffic - Urban (TU)<br>             <b>Pollutants:</b> NO2, O3<br>             <b>Color code:</b>             <span style='color:#E63946;                          font-weight:bold;'>                 🚗 Traffic             </span>         </div>     </div>     </div>`)[0];
+                popup_c5d7d4a5d606a864efb3d6817e20e9ad.setContent(html_2c45dabf1fd9bbf8a92e3c2490fa9dac);
+            
+        
+
+        marker_c8f07835ba7a6382c6dc9b96f8147834.bindPopup(popup_c5d7d4a5d606a864efb3d6817e20e9ad)
+        ;
+
+        
+    
+    
+            marker_c8f07835ba7a6382c6dc9b96f8147834.bindTooltip(
+                `<div>
+                     ARPA: Cinisello Balsamo (TU)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c8f07835ba7a6382c6dc9b96f8147834.setIcon(icon_a85e1b2883ecaee42b8a23e0d5856244);
+            
+    
+            var circle_83533af714d527076b2ce0e6a6c04736 = L.circle(
+                [45.4628, 9.1958],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E63946", "fillOpacity": 0.04, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1000, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            circle_83533af714d527076b2ce0e6a6c04736.bindTooltip(
+                `<div>
+                     1km proximity zone: Milano Verziere
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_ae6134787064bc39b4be3734834535e7 = L.circle(
+                [45.4783, 9.2358],
+                {"bubblingMouseEvents": true, "color": "#2DC653", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2DC653", "fillOpacity": 0.04, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1000, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            circle_ae6134787064bc39b4be3734834535e7.bindTooltip(
+                `<div>
+                     1km proximity zone: Milano Pascal Citta Studi
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_111b983490ffbc9bfeab575762d69fdd = L.circle(
+                [45.4697, 9.1981],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E63946", "fillOpacity": 0.04, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1000, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            circle_111b983490ffbc9bfeab575762d69fdd.bindTooltip(
+                `<div>
+                     1km proximity zone: Milano v.Senato
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_850dc10139f88affe3c3317de93a77dc = L.circle(
+                [45.5339, 9.2364],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E63946", "fillOpacity": 0.04, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1000, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            circle_850dc10139f88affe3c3317de93a77dc.bindTooltip(
+                `<div>
+                     1km proximity zone: Sesto San Giovanni
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_0565559a00de35b6a1f6b0ae663c4e78 = L.circle(
+                [45.5514, 9.2278],
+                {"bubblingMouseEvents": true, "color": "#E63946", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E63946", "fillOpacity": 0.04, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 1000, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9916cc9d0d554b9fcfba8bc86b264c89);
+        
+    
+            circle_0565559a00de35b6a1f6b0ae663c4e78.bindTooltip(
+                `<div>
+                     1km proximity zone: Cinisello Balsamo
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            feature_group_9916cc9d0d554b9fcfba8bc86b264c89.addTo(map_e67ee378723fee8477c5b631c35cedb1);
+        
+    
+            var feature_group_1dcb54f15382ae6690b12333f97b33d9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_8f1e90833ec1eac521787054c2a7a4d2 = L.marker(
+                [45.4654, 9.1859],
+                {
+}
+            ).addTo(feature_group_1dcb54f15382ae6690b12333f97b33d9);
+        
+    
+            var icon_3d97e29d639b1bad868f90702b13beee = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "wifi",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_79819d188b2efd10744e4ad8efdb15af = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_07bcd5a6d1a54a59a40ef2d11b0e0aab = $(`<div id="html_07bcd5a6d1a54a59a40ef2d11b0e0aab" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:240px;'>         <div style='background:#065A82; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             AirGradient Milano         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Network:</b> AirGradient<br>             <b>Near ARPA:</b> Milano Verziere<br>             <b>Environment:</b> Urban mixed<br>             <b>Comparable:</b>             <span style='color:#E63946; font-weight:bold;'>                 NO             </span>         </div>     </div>     </div>`)[0];
+                popup_79819d188b2efd10744e4ad8efdb15af.setContent(html_07bcd5a6d1a54a59a40ef2d11b0e0aab);
+            
+        
+
+        marker_8f1e90833ec1eac521787054c2a7a4d2.bindPopup(popup_79819d188b2efd10744e4ad8efdb15af)
+        ;
+
+        
+    
+    
+            marker_8f1e90833ec1eac521787054c2a7a4d2.bindTooltip(
+                `<div>
+                     AirGradient: AirGradient Milano
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8f1e90833ec1eac521787054c2a7a4d2.setIcon(icon_3d97e29d639b1bad868f90702b13beee);
+            
+    
+            var marker_6e55e2d342b1e910caa4e01523289f37 = L.marker(
+                [45.4642, 9.19],
+                {
+}
+            ).addTo(feature_group_1dcb54f15382ae6690b12333f97b33d9);
+        
+    
+            var icon_e703fe649bf83587b3b2980dd20a2634 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "microchip",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_19830d1bd8725bc54e8991916e690580 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bb7731932b5373d4c958bb5c06e77080 = $(`<div id="html_bb7731932b5373d4c958bb5c06e77080" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:240px;'>         <div style='background:#065A82; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             CAL 001 (SCK)         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Network:</b> SmartCitizenKit<br>             <b>Near ARPA:</b> Milano Verziere + Senato<br>             <b>Environment:</b> Unknown<br>             <b>Comparable:</b>             <span style='color:#E63946; font-weight:bold;'>                 NO             </span>         </div>     </div>     </div>`)[0];
+                popup_19830d1bd8725bc54e8991916e690580.setContent(html_bb7731932b5373d4c958bb5c06e77080);
+            
+        
+
+        marker_6e55e2d342b1e910caa4e01523289f37.bindPopup(popup_19830d1bd8725bc54e8991916e690580)
+        ;
+
+        
+    
+    
+            marker_6e55e2d342b1e910caa4e01523289f37.bindTooltip(
+                `<div>
+                     SmartCitizenKit: CAL 001 (SCK)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6e55e2d342b1e910caa4e01523289f37.setIcon(icon_e703fe649bf83587b3b2980dd20a2634);
+            
+    
+            var marker_cedd5e05feb360e606fe7b2d470194b9 = L.marker(
+                [45.4805, 9.2327],
+                {
+}
+            ).addTo(feature_group_1dcb54f15382ae6690b12333f97b33d9);
+        
+    
+            var icon_d97bf100e3dc7400cd5dccf456c4ae7e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "microchip",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fba9ada0be1ab30bdfe26223803113dd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ee897066376f9d9550c21ea4ba5aed2e = $(`<div id="html_ee897066376f9d9550c21ea4ba5aed2e" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:240px;'>         <div style='background:#065A82; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             SaliuA0A6 (SCK)         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Network:</b> SmartCitizenKit<br>             <b>Near ARPA:</b> Milano Pascal<br>             <b>Environment:</b> Background Urban - Citta Studi<br>             <b>Comparable:</b>             <span style='color:#2DC653; font-weight:bold;'>                 YES             </span>         </div>     </div>     </div>`)[0];
+                popup_fba9ada0be1ab30bdfe26223803113dd.setContent(html_ee897066376f9d9550c21ea4ba5aed2e);
+            
+        
+
+        marker_cedd5e05feb360e606fe7b2d470194b9.bindPopup(popup_fba9ada0be1ab30bdfe26223803113dd)
+        ;
+
+        
+    
+    
+            marker_cedd5e05feb360e606fe7b2d470194b9.bindTooltip(
+                `<div>
+                     SmartCitizenKit: SaliuA0A6 (SCK)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_cedd5e05feb360e606fe7b2d470194b9.setIcon(icon_d97bf100e3dc7400cd5dccf456c4ae7e);
+            
+    
+            var marker_389d295276b8028a1bc26818e941d845 = L.marker(
+                [45.5361, 9.2263],
+                {
+}
+            ).addTo(feature_group_1dcb54f15382ae6690b12333f97b33d9);
+        
+    
+            var icon_361917522254fa7cfd103381e0695de0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "cloud",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d22b4ea8ff6b9b3dba85dd778fe0b898 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2b32e52d9671ffe6878d672dbc8bb7ed = $(`<div id="html_2b32e52d9671ffe6878d672dbc8bb7ed" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:240px;'>         <div style='background:#065A82; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             SC near Sesto         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Network:</b> Sensor.Community<br>             <b>Near ARPA:</b> Sesto San Giovanni<br>             <b>Environment:</b> Pedestrianised historic centre<br>             <b>Comparable:</b>             <span style='color:#E63946; font-weight:bold;'>                 NO             </span>         </div>     </div>     </div>`)[0];
+                popup_d22b4ea8ff6b9b3dba85dd778fe0b898.setContent(html_2b32e52d9671ffe6878d672dbc8bb7ed);
+            
+        
+
+        marker_389d295276b8028a1bc26818e941d845.bindPopup(popup_d22b4ea8ff6b9b3dba85dd778fe0b898)
+        ;
+
+        
+    
+    
+            marker_389d295276b8028a1bc26818e941d845.bindTooltip(
+                `<div>
+                     Sensor.Community: SC near Sesto
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_389d295276b8028a1bc26818e941d845.setIcon(icon_361917522254fa7cfd103381e0695de0);
+            
+    
+            var marker_0fa9d15d9d5fb3b4b1b07998e3e50497 = L.marker(
+                [45.544, 9.232],
+                {
+}
+            ).addTo(feature_group_1dcb54f15382ae6690b12333f97b33d9);
+        
+    
+            var icon_7c45413054128b5f0ee2ed2e7d087835 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "cloud",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a0644ebd998de437510376859668f164 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8bcbadd22be21e9633103c51e42a4188 = $(`<div id="html_8bcbadd22be21e9633103c51e42a4188" style="width: 100.0%; height: 100.0%;">     <div style='font-family:Arial; min-width:240px;'>         <div style='background:#065A82; color:white; padding:8px 12px;                     border-radius:6px 6px 0 0; font-weight:bold; font-size:13px;'>             SC near Cinisello         </div>         <div style='padding:10px 12px; background:#f8f9fa; border-radius:0 0 6px 6px;'>             <b>Network:</b> Sensor.Community<br>             <b>Near ARPA:</b> Cinisello Balsamo<br>             <b>Environment:</b> Residential urban<br>             <b>Comparable:</b>             <span style='color:#E63946; font-weight:bold;'>                 NO             </span>         </div>     </div>     </div>`)[0];
+                popup_a0644ebd998de437510376859668f164.setContent(html_8bcbadd22be21e9633103c51e42a4188);
+            
+        
+
+        marker_0fa9d15d9d5fb3b4b1b07998e3e50497.bindPopup(popup_a0644ebd998de437510376859668f164)
+        ;
+
+        
+    
+    
+            marker_0fa9d15d9d5fb3b4b1b07998e3e50497.bindTooltip(
+                `<div>
+                     Sensor.Community: SC near Cinisello
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0fa9d15d9d5fb3b4b1b07998e3e50497.setIcon(icon_7c45413054128b5f0ee2ed2e7d087835);
+            
+    
+            feature_group_1dcb54f15382ae6690b12333f97b33d9.addTo(map_e67ee378723fee8477c5b631c35cedb1);
+        
+    
+            var layer_control_f2911e317447c0673308e39a1c7129c2_layers = {
+                base_layers : {
+                    "Dark (default)" : tile_layer_7e3a8d9881c180eb75bdc4a9b9ceda69,
+                    "Light" : tile_layer_e44f58268393f092a9284760eb4d6a4c,
+                    "Street Map" : tile_layer_3271b86dad45e5159cb125218d473440,
+                },
+                overlays :  {
+                    "Proximity Lines (1km)" : feature_group_6ed75ccc8f5684fd30d0db416481e170,
+                    "ARPA Official Stations" : feature_group_9916cc9d0d554b9fcfba8bc86b264c89,
+                    "Independent Sensors" : feature_group_1dcb54f15382ae6690b12333f97b33d9,
+                },
+            };
+            let layer_control_f2911e317447c0673308e39a1c7129c2 = L.control.layers(
+                layer_control_f2911e317447c0673308e39a1c7129c2_layers.base_layers,
+                layer_control_f2911e317447c0673308e39a1c7129c2_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_e67ee378723fee8477c5b631c35cedb1);
+
+        
+</script>
+</html>
