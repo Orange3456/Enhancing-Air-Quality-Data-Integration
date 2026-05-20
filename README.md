@@ -1,6 +1,6 @@
 # Enhancing Air Quality Data Integration
 
-**MSc GeoInformatics Engineering - GeoInformatics Project (GIP)**  
+**MSc GeoInformatics Engineering - GeoInformatics Project (GIP)**
 Politecnico di Milano | 5 Credits
 
 ---
@@ -9,7 +9,7 @@ Politecnico di Milano | 5 Credits
 
 This project investigates how well independent citizen sensor networks cover the official ARPA air quality monitoring network in Milan (Metropolitan City of Milano - MCM) and Italy. The goal is to assess whether citizen sensor data can be integrated with official reference monitor data.
 
-**Research Question:**  
+**Research Question:**
 How many official ARPA stations have an independent citizen sensor within 1km? Are the readings comparable? What are the gaps that prevent integration?
 
 ---
@@ -30,24 +30,24 @@ How many official ARPA stations have an independent citizen sensor within 1km? A
 
 ### Four Integration Gaps
 
-**Gap 1 - Spatial (93%)**  
+**Gap 1 - Spatial (93%)**
 93% of Italian ARPA stations have no independent sensor within 1km. In MCM the rate is 69% uncovered (only 5 of 16 ARPA stations have a nearby independent sensor).
 
-**Gap 2 - Temporal (0 years)**  
+**Gap 2 - Temporal (0 years)**
 No independent sensor in MCM has historical data before October 2024. All Sensor.Community PM sensors in MCM are brand new with no archive. Maximum comparison period is 42 days (Dec 2024 - Jan 2025).
 
-**Gap 3 - Pollutant Mismatch (2 of 7)**  
+**Gap 3 - Pollutant Mismatch (2 of 7)**
 ARPA measures gas pollutants (NO2, O3, SO2) for regulatory compliance. Independent citizen sensors mainly measure particulate matter (PM2.5, PM10). Only PM2.5 and PM10 are common between both networks.
 
-**Gap 4 - Data Quality (3-5x)**  
+**Gap 4 - Data Quality (3-5x)**
 The one valid comparable pair (Milano Pascal ARPA vs SaliuA0A6 SCK) showed SCK reads 3.2x lower than ARPA for PM2.5 and 4.7x lower for PM10. Calibration is essential before integration.
 
 ---
 
 ## Statistical Results - Reading Comparison
 
-**Data source:** ARPA Lombardia direct API (sensor IDs: PM2.5=10283, PM10=10273)  
-**Resolution:** Daily averages (gravimetric reference method - official regulatory measurement)  
+**Data source:** ARPA Lombardia direct API (sensor IDs: PM2.5=10283, PM10=10273)
+**Resolution:** Daily averages (gravimetric reference method - official regulatory measurement)
 **Period:** Dec 2024 - Jan 2025 (42 days) | **Matched pairs:** 24 days PM2.5, 25 days PM10
 
 | Metric | PM2.5 ARPA | PM2.5 SCK | PM10 ARPA | PM10 SCK |
@@ -66,40 +66,36 @@ The one valid comparable pair (Milano Pascal ARPA vs SaliuA0A6 SCK) showed SCK r
 
 ## Notebook Structure
 
-`Enhancing Air Quality Data Integration.ipynb` contains all analysis across 47 cells:
+`Enhancing Air Quality Data Integration.ipynb` contains all analysis across 46 cells:
 
 | Cells | Step | Description |
 |---|---|---|
 | 1-14 | Step 1 - Data Collection | Fetch and map all 5 networks inside MCM |
 | 15-20 | Step 1 - Measurements | Download readings and build comparative table |
-| 21-22 | Step 1 - Visualisation | Interactive Folium map + summary |
+| 21-22 | Step 1 - Visualisation | Interactive Folium map and summary |
 | 23-29 | Step 1 - Classification | Compare against official ARPA Lombardia CSV |
-| 30-34 | Step 2 - Proximity Analysis | MCM proximity rate + Italy national analysis |
+| 30-34 | Step 2 - Proximity Analysis | MCM proximity rate and Italy national analysis |
 | 35 | Step 3 - Terminology | Rename overlap to proximity in all outputs |
 | 36 | Step 3 - Typology | Station environment classification for all 5 pairs |
 | 37 | Step 3 - Typology Map | Interactive HTML map - MCM proximity pairs color coded |
 | 38 | Step 3 - ARPA Direct Fetch | Fetch PM2.5 and PM10 from ARPA Lombardia direct API and save as CSV |
 | 39 | Step 3 - Reading Comparison | PM2.5 and PM10 comparison - ARPA vs SCK with full statistics and plots |
 | 40-43 | Step 3 - Investigation | SC archive check, data availability for all 5 pairs |
-| 44-46 | Step 3 - Italy Map | Full Italy interactive map - all ARPA + all independent sensors |
-| 47 | - | Empty |
+| 44-46 | Step 3 - Italy Map | Full Italy interactive map - all ARPA and all independent sensors |
 
 ---
 
 ## ARPA Data Source
 
-ARPA PM2.5 and PM10 data is fetched directly from the **ARPA Lombardia open data portal** - bypassing OpenAQ:
-
-```
+ARPA PM2.5 and PM10 data is fetched directly from the **ARPA Lombardia open data portal** - bypassing OpenAQ: 
 https://www.dati.lombardia.it/resource/nicp-bhqi.json
-```
 
 | Pollutant | Sensor ID | Name | Available From |
 |---|---|---|---|
 | PM2.5 | 10283 | Particelle sospese PM2.5 | 2007 |
 | PM10 | 10273 | PM10 (SM2005) | 2007 |
 
-Data type: **Daily averages** (gravimetric method - official regulatory measurement, gold standard).  
+Data type: **Daily averages** (gravimetric method - official regulatory measurement, gold standard).
 Data is saved locally to `arpa_pm25_saved.csv` and `arpa_pm10_saved.csv` to avoid repeated API calls.
 
 ---
@@ -107,22 +103,17 @@ Data is saved locally to `arpa_pm25_saved.csv` and `arpa_pm10_saved.csv` to avoi
 ## How the 3x3 Grid Query Works (Sensor.Community)
 
 The Sensor.Community API has a radius limit per query. Italy is too large to cover in a single query. The country was divided into a 3x3 grid of 9 cells:
-
-```
 Italy bounding box: lat 36-47.5, lon 6-19
-
 Grid 1,1  Grid 1,2  Grid 1,3   (South)
 Grid 2,1  Grid 2,2  Grid 2,3   (Centre)
 Grid 3,1  Grid 3,2  Grid 3,3   (North)
-```
+
 
 Each cell was queried separately using the SC area filter API. Results were merged and deduplicated by unique station ID to give the final count of approximately 1,355 unique PM sensors across Italy.
 
 ---
 
 ## Requirements
-
-```
 python >= 3.10
 requests
 pandas
@@ -132,9 +123,8 @@ matplotlib
 scipy
 openpyxl
 shapely
-```
 
-Install:
+Install dependencies:
 ```bash
 pip install requests pandas geopandas folium matplotlib scipy openpyxl shapely
 ```
@@ -143,7 +133,7 @@ pip install requests pandas geopandas folium matplotlib scipy openpyxl shapely
 
 ## API Keys Required
 
-Add at the top of the notebook (Cell 2):
+Add these at the top of the notebook (Cell 2):
 
 ```python
 OPENAQ_KEY       = "your_openaq_api_key"
@@ -161,6 +151,7 @@ Place in the same directory as the notebook:
 
 - `MCM.gpkg` - Metropolitan City of Milano boundary (GeoPackage)
 - `Elenco-stazioni-rete-rilevamento-qualita-aria.csv` - Official ARPA Lombardia station list
+- `Italy_Adm0/ITA_adm0.shp` - Italy boundary shapefile for polygon filter
 
 Auto-generated by the notebook (Cell 38):
 
@@ -198,6 +189,6 @@ Verified station typology (Traffic/Background) before comparing readings. Only 1
 
 ## Author
 
-Praveenkumar Saminathan  
-MSc GeoInformatics Engineering  
-Politecnico di Milano  
+Praveenkumar Saminathan
+MSc GeoInformatics Engineering
+Politecnico di Milano
