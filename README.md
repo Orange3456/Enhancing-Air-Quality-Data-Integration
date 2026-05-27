@@ -155,6 +155,3 @@ Five networks were discovered and investigated inside MCM:
 Praveenkumar Saminathan
 MSc GeoInformatics Engineering, 
 Politecnico di Milano
-praveennathan10@gmail.com
-linkedin.com/in/praveen-kumar-s-993902228
-https://orange3456.github.io/praveenkumar-saminathan.github.io/
