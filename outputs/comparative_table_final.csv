@@ -1,0 +1,37 @@
+Network,Pollutant,Unit,Temporal Resolution,Min Date,Max Date,% Null (2019-now),Source,Note
+OpenAQ (EEA/ARPA),NO2,µg/m³,Hourly,2020-05-06,2026-05-26,37.2,Official ARPA Lombardia via EEA,Data starts 2020 not 2019
+OpenAQ (EEA/ARPA),PM10,µg/m³,Hourly,2024-01-28,2026-05-26,68.7,Official ARPA Lombardia via EEA,Data starts 2020 not 2019
+OpenAQ (EEA/ARPA),PM25,µg/m³,Hourly,2024-01-28,2026-05-26,69.5,Official ARPA Lombardia via EEA,Data starts 2020 not 2019
+OpenAQ (EEA/ARPA),CO,µg/m³,Hourly,2020-05-06,2026-05-26,46.1,Official ARPA Lombardia via EEA,Data starts 2020 not 2019
+OpenAQ (EEA/ARPA),O3,µg/m³,Hourly,2020-05-06,2026-05-26,43.7,Official ARPA Lombardia via EEA,Data starts 2020 not 2019
+OpenAQ (EEA/ARPA),SO2,µg/m³,Hourly,2020-05-06,2026-05-26,46.3,Official ARPA Lombardia via EEA,Data starts 2020 not 2019
+AirGradient,PM1,µg/m³,Hourly,2024-10-07,2026-05-27,85.5,Independent citizen sensors,Data starts 2024
+AirGradient,RELATIVEHUMIDITY,%,Hourly,2024-10-07,2026-05-27,85.5,Independent citizen sensors,Data starts 2024
+AirGradient,UM003,particles/cm³,Hourly,2024-10-07,2026-05-27,85.5,Independent citizen sensors,Data starts 2024
+AirGradient,PM25,µg/m³,Hourly,2024-10-07,2026-05-27,85.5,Independent citizen sensors,Data starts 2024
+AirGradient,PM10,µg/m³,Hourly,2024-10-07,2025-01-13,97.5,Independent citizen sensors,Data starts 2024
+AirGradient,TEMPERATURE,c,Hourly,2024-10-07,2026-05-27,85.5,Independent citizen sensors,Data starts 2024
+AQICN,NO2,AQI index,Hourly,2020-05-06,2026-05-26,18.2,Official ARPA Lombardia via AQICN,AQI index only - same ARPA source as OpenAQ
+AQICN,CO,AQI index,Hourly,2020-05-06,2026-05-26,18.2,Official ARPA Lombardia via AQICN,AQI index only - same ARPA source as OpenAQ
+AQICN,PM2.5,AQI index,Hourly,2020-05-06,2026-05-26,18.2,Official ARPA Lombardia via AQICN,AQI index only - same ARPA source as OpenAQ
+AQICN,PM10,AQI index,Hourly,2020-05-06,2026-05-26,18.2,Official ARPA Lombardia via AQICN,AQI index only - same ARPA source as OpenAQ
+AQICN,SO2,AQI index,Hourly,2020-05-06,2026-05-26,18.2,Official ARPA Lombardia via AQICN,AQI index only - same ARPA source as OpenAQ
+AQICN,O3,AQI index,Hourly,2020-05-06,2026-05-26,18.2,Official ARPA Lombardia via AQICN,AQI index only - same ARPA source as OpenAQ
+SmartCitizenKit,Relative Humidity,%,Every ~1 min,2013-12-01,2026-05-27,98.6,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,Air Temperature,ºC,Every ~1 min,2013-12-01,2026-05-27,98.6,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,co,kOhm,Every ~1 min,2013-12-01,2019-03-07,99.2,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,no2,kOhm,Every ~1 min,2013-12-01,2019-03-07,99.2,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,Noise Level,dB,Every ~1 min,2013-12-01,2026-05-27,98.6,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,PM1,ug/m3,Every ~1 min,2019-04-04,2026-05-27,98.3,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,PM10,ug/m3,Every ~1 min,2019-04-04,2026-05-27,98.3,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,PM2.5,ug/m3,Every ~1 min,2019-04-04,2026-05-27,98.3,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,PM4.0,ug/m3,Every ~1 min,2024-12-03,2026-05-27,98.1,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,eCO2,ppm,Every ~1 min,2019-04-04,2019-04-15,99.6,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,Water Temperature,ºC,Every ~1 min,2025-01-14,2025-01-23,99.7,Independent citizen sensors,CO/NO2 in kOhm on older devices
+SmartCitizenKit,Electrical Conductivity,µS/cm,Every ~1 min,2025-01-14,2025-01-23,99.7,Independent citizen sensors,CO/NO2 in kOhm on older devices
+Sensor.Community,Temperature,°C,Every ~2.5 min,2017-01-01,2026-05-27,0.0,Independent citizen sensors,Archive from 2017; no NO2/SO2/O3/CO
+Sensor.Community,Humidity,%,Every ~2.5 min,2017-01-01,2026-05-27,0.0,Independent citizen sensors,Archive from 2017; no NO2/SO2/O3/CO
+Sensor.Community,PM10,µg/m³,Every ~2.5 min,2017-01-01,2026-05-27,0.0,Independent citizen sensors,Archive from 2017; no NO2/SO2/O3/CO
+Sensor.Community,PM2.5,µg/m³,Every ~2.5 min,2017-01-01,2026-05-27,0.0,Independent citizen sensors,Archive from 2017; no NO2/SO2/O3/CO
+Sensor.Community,Pressure,hPa,Every ~2.5 min,2017-01-01,2026-05-27,0.0,Independent citizen sensors,Archive from 2017; no NO2/SO2/O3/CO
+Sensor.Community,Pressure at Sea Level,hPa,Every ~2.5 min,2017-01-01,2026-05-27,0.0,Independent citizen sensors,Archive from 2017; no NO2/SO2/O3/CO
